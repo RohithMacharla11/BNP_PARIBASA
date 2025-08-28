@@ -24,6 +24,8 @@ const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
   { href: '/payments', icon: Wallet, label: 'Payments' },
+  { href: '/cards', icon: CreditCard, label: 'Cards' },
+  { href: '/wallet', icon: Wallet, label: 'Wallet' },
   { href: '/investments', icon: TrendingUp, label: 'Investments' },
   { href: '/credit', icon: CreditCard, label: 'Credit Score' },
   { href: '/chat', icon: MessageCircle, label: 'Chat Assistant' },
