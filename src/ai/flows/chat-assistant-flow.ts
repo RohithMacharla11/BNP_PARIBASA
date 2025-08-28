@@ -18,7 +18,7 @@ export type ChatAssistantInput = z.infer<typeof ChatAssistantInputSchema>;
 
 const ChatAssistantOutputSchema = z.object({
   response: z.string().describe('The AI-generated response to the user query.'),
-  scamWarning: z.string().optional().describe('A warning message if the AI detects potential scam or suspicious activity.'),
+  scamWarning: z.string().nullable().optional().describe('A warning message if the AI detects potential scam or suspicious activity.'),
 });
 export type ChatAssistantOutput = z.infer<typeof ChatAssistantOutputSchema>;
 
@@ -32,13 +32,21 @@ const detectScamTool = ai.defineTool({
   inputSchema: z.object({
     query: z.string().describe('The user query to analyze for scams.'),
   }),
-  outputSchema: z.string().optional().describe('A warning message if a scam is detected, otherwise undefined.'),
+  outputSchema: z.string().nullable().describe('A warning message if a scam is detected, otherwise null.'),
 },
 async (input) => {
-    if (input.query.toLowerCase().includes('potential scam')) {
-      return 'Warning: This query may be related to a potential scam. Please be cautious and verify the information.';
-    }
-    return undefined;
+    const response = await ai.generate({
+      prompt: `Analyze the following query for potential scams: "${input.query}". If you detect a scam, provide a concise warning message. If not, return null.`,
+      output: {
+        format: 'json',
+        schema: z.object({
+          warning: z.string().nullable(),
+        }),
+      },
+      model: 'googleai/gemini-2.5-flash'
+    });
+    
+    return response.output?.warning ?? null;
   }
 );
 
@@ -49,7 +57,7 @@ const chatAssistantPrompt = ai.definePrompt({
   tools: [detectScamTool],
   prompt: `You are a helpful AI Chat Assistant for a digital banking application. Answer user queries related to banking and provide helpful financial advice.
 
-  If the detectScam tool returns a scam warning, include it in your response.  If a scam is detected, you MUST include the scam warning.
+  Use the detectScam tool to check for scams in the user query. If the tool returns a warning, you MUST include that exact warning in the 'scamWarning' field of your response.
 
   User Query: {{{query}}}`,
 });
