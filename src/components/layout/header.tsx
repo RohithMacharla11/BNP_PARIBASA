@@ -16,6 +16,8 @@ import {
   Bell,
   Sun,
   Moon,
+  CreditCard,
+  Mic,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -49,12 +51,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useTheme } from 'next-themes';
 import React from 'react';
+import { VoiceAssistant } from '../shared/voice-assistant';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
   { href: '/payments', icon: Wallet, label: 'Payments' },
   { href: '/investments', icon: TrendingUp, label: 'Investments' },
+  { href: '/credit', icon: CreditCard, label: 'Credit Score' },
   { href: '/chat', icon: MessageCircle, label: 'Chat Assistant' },
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
@@ -171,10 +175,6 @@ function UserMenu() {
 
 export function AppHeader() {
   const pathname = usePathname();
-  const pageTitle =
-    navItems.find((item) => pathname.startsWith(item.href))?.label ||
-    'ApexBank';
-
   const breadcrumbParts = pathname.split('/').filter(Boolean);
 
 
@@ -242,6 +242,7 @@ export function AppHeader() {
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
         />
       </div>
+      <VoiceAssistant />
       <Notifications />
       <UserMenu />
     </header>

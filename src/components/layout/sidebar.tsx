@@ -16,6 +16,7 @@ import {
   MessageCircle,
   Settings,
   Mountain,
+  CreditCard,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +25,7 @@ const navItems = [
   { href: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
   { href: '/payments', icon: Wallet, label: 'Payments' },
   { href: '/investments', icon: TrendingUp, label: 'Investments' },
+  { href: '/credit', icon: CreditCard, label: 'Credit Score' },
   { href: '/chat', icon: MessageCircle, label: 'Chat Assistant' },
 ];
 
