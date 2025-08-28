@@ -18,48 +18,35 @@ export type ChatAssistantInput = z.infer<typeof ChatAssistantInputSchema>;
 
 const ChatAssistantOutputSchema = z.object({
   response: z.string().describe('The AI-generated response to the user query.'),
-  scamWarning: z.string().nullable().optional().describe('A warning message if the AI detects potential scam or suspicious activity.'),
+  scamWarning: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'A concise warning message if the query seems related to a potential scam, otherwise null.'
+    ),
 });
 export type ChatAssistantOutput = z.infer<typeof ChatAssistantOutputSchema>;
 
-export async function chatAssistant(input: ChatAssistantInput): Promise<ChatAssistantOutput> {
+export async function chatAssistant(
+  input: ChatAssistantInput
+): Promise<ChatAssistantOutput> {
   return chatAssistantFlow(input);
 }
-
-const detectScamTool = ai.defineTool({
-  name: 'detectScam',
-  description: 'Detects potential scams or suspicious activity in the user query.',
-  inputSchema: z.object({
-    query: z.string().describe('The user query to analyze for scams.'),
-  }),
-  outputSchema: z.string().nullable().describe('A warning message if a scam is detected, otherwise null.'),
-},
-async (input) => {
-    const response = await ai.generate({
-      prompt: `Analyze the following query for potential scams: "${input.query}". If you detect a scam, provide a concise warning message. If not, return null.`,
-      output: {
-        format: 'json',
-        schema: z.object({
-          warning: z.string().nullable(),
-        }),
-      },
-      model: 'googleai/gemini-2.5-flash'
-    });
-    
-    return response.output?.warning ?? null;
-  }
-);
 
 const chatAssistantPrompt = ai.definePrompt({
   name: 'chatAssistantPrompt',
   input: {schema: ChatAssistantInputSchema},
   output: {schema: ChatAssistantOutputSchema},
-  tools: [detectScamTool],
-  prompt: `You are a helpful AI Chat Assistant for a digital banking application. Answer user queries related to banking and provide helpful financial advice.
+  prompt: `You are a helpful AI Chat Assistant for a digital banking application. Your primary role is to answer user queries related to banking and provide helpful financial advice.
 
-  Use the detectScam tool to check for scams in the user query. If the tool returns a warning, you MUST include that exact warning in the 'scamWarning' field of your response.
+First, analyze the user's query for any signs of a potential scam (e.g., requests for personal information, urgent demands for money, suspicious links, lottery wins).
 
-  User Query: {{{query}}}`,
+- If you detect a potential scam, set the 'scamWarning' field with a concise warning.
+- Then, provide a helpful and safe response in the 'response' field, advising the user to be cautious without confirming any of the scam's details.
+- If no scam is detected, set 'scamWarning' to null and answer the user's query as usual.
+
+User Query: {{{query}}}`,
 });
 
 const chatAssistantFlow = ai.defineFlow(
@@ -68,7 +55,7 @@ const chatAssistantFlow = ai.defineFlow(
     inputSchema: ChatAssistantInputSchema,
     outputSchema: ChatAssistantOutputSchema,
   },
-  async input => {
+  async (input) => {
     const {output} = await chatAssistantPrompt(input);
     return output!;
   }
