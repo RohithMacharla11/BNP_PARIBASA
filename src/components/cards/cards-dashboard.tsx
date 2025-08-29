@@ -17,7 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import Image from 'next/image';
 
 const cardData = [
     {
@@ -82,7 +81,7 @@ export function CardsDashboard() {
                 <div>
                     <div className="flex justify-between items-center">
                         <span className="font-semibold text-lg">{card.bank}</span>
-                        <Image src="/img/visa-logo.png" data-ai-hint="visa logo" alt="Visa" width={40} height={25} />
+                        <CreditCard className="w-8 h-8 opacity-70" />
                     </div>
                     <span className="text-xs capitalize">{card.type} Card</span>
                 </div>
