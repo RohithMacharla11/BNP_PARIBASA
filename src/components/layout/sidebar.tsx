@@ -29,6 +29,7 @@ const navItems = [
   { href: '/investments', icon: TrendingUp, label: 'Investments' },
   { href: '/credit', icon: CreditCard, label: 'Credit Score' },
   { href: '/chat', icon: MessageCircle, label: 'Chat Assistant' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
 export function AppSidebar() {

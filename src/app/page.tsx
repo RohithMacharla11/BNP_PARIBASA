@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
 export default function HomePage() {
-  redirect('/dashboard');
+  // TODO: Add authentication check here
+  redirect('/signup');
 }
