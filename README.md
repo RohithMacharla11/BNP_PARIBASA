@@ -14,6 +14,8 @@ This is a modern, feature-rich digital banking application prototype built with 
 - **AI Chat Assistant**: Get financial advice and scam warnings with a smart chatbot.
 - **Voice Assistant**: Perform banking queries hands-free using your voice.
 
+
+
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/) (App Router)
